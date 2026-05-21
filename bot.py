@@ -3,6 +3,9 @@ from pyrogram.types import Message
 import asyncio
 import os
 
+# Fix for Render/Python 3.11
+asyncio.set_event_loop(asyncio.new_event_loop())
+
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
