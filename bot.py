@@ -3,15 +3,12 @@ from pyrogram.types import Message
 import asyncio
 import os
 
-# Fix for Render/Pasyncio.set_event_loop(asyncio.new_event_loop()
-import asyncio
-
-asyncio.run(main())
-
+# Environment Variables
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+# Pyrogram Client
 app = Client(
     "file_separator_bot",
     api_id=API_ID,
@@ -19,8 +16,10 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
+# Store Media Groups
 media_groups = {}
 
+# Start Command
 @app.on_message(filters.command("start"))
 async def start_command(client, message):
     await message.reply_text(
@@ -28,6 +27,7 @@ async def start_command(client, message):
         "Send media albums or multiple files and I will separate them automatically."
     )
 
+# Handle Media Groups
 @app.on_message(filters.media_group)
 async def handle_media_group(client, message: Message):
     group_id = message.media_group_id
@@ -37,6 +37,7 @@ async def handle_media_group(client, message: Message):
 
     media_groups[group_id].append(message)
 
+    # Wait for all album files
     await asyncio.sleep(2)
 
     if len(media_groups[group_id]) > 0:
@@ -50,5 +51,6 @@ async def handle_media_group(client, message: Message):
 
         del media_groups[group_id]
 
+# Bot Start
 print("✅ Bot Started...")
 app.run()
